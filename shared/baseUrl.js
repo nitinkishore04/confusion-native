@@ -1,0 +1,1 @@
+export const baseUrl = 'http://47.9.243.144:3001'
