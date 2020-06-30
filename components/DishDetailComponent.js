@@ -1,6 +1,6 @@
 import React, { Component} from 'react'
 import { View, Text, FlatList, ScrollView } from 'react-native';
-import { Card } from 'react-native-elements';
+import { Card, Icon } from 'react-native-elements';
 import { DISHES } from '../shared/dishes';
 import { COMMENTS } from '../shared/comments';
 
@@ -11,6 +11,22 @@ function RenderDish(props) {
         return(
             <Card featuredTitle = {dish.name} image = {require('./images/buffet.png')}>
                 <Text style={{margin: 10}}>{dish.description}</Text>
+                <Icon
+                    raised
+                    reverse
+                    name = { props.favorite ? 'heart' : 'heart-o'}
+                    type = 'font-awesome'
+                    color = '#f50'
+                    onPress = { () => props.favorite ? console.log('Already Favorite') : props.onPress()}
+                />
+                {/* <Icon
+                    raised
+                    reverse
+                    name={ props.favorite ? 'heart' : 'heart-o'}
+                    type='font-awesome'
+                    color='#f50'
+                    onPress={() => props.favorite ? console.log('Already favorite') : props.onPress()}
+                    /> */}
             </Card>
         );
     }
@@ -52,9 +68,17 @@ class DishDetail extends Component {
 
         this.state={
             dishes: DISHES,
-            comment: COMMENTS
+            comment: COMMENTS,
+            favorites: []
         };
     }
+
+    markFavorites(dishId){
+        this.setState({ favorites: this.state.favorites.concat(dishId)});
+    }
+    // markFavorite(dishId) {
+    //     this.setState({favorites: this.state.favorites.concat(dishId)});
+    // }
     
     static navigationOptions = {
         title: "Dish Detail"
@@ -65,7 +89,10 @@ class DishDetail extends Component {
         const dishId = this.props.navigation.getParam('dishId', '');        
         return(
             <ScrollView>
-                <RenderDish dish={this.state.dishes[+dishId]} />
+                <RenderDish dish={this.state.dishes[+dishId]} 
+                    favorite={this.state.favorites.some(el => el === dishId)}
+                    onPress={() => this.markFavorites(dishId)}
+                    />
                 <RenderComment comment={this.state.comment.filter(comment => comment.dishId === dishId)}/>
             </ScrollView>
         );
