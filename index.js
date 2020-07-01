@@ -9,6 +9,7 @@ import { YellowBox } from 'react-native';
 YellowBox.ignoreWarnings([
     'componentWillReceiveProps has been renamed',
     'DrawerLayoutAndroid drawerPosition',
-    'VirtualizedLists should never be nested'
+    'VirtualizedLists should never be nested',
+    'componentWillUpdate has been renamed'
 ])
 registerRootComponent(App);
