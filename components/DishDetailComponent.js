@@ -4,7 +4,7 @@ import { Card, Icon, Input, Rating } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
 
-import { postFavorite } from '../redux/ActionCreators'
+import { postFavorite, postComment } from '../redux/ActionCreators'
 
 
 const mapStateToProps = state =>{
@@ -16,7 +16,8 @@ const mapStateToProps = state =>{
 }
 
 const mapDispatchToProps = dispatch => ({
-    postFavorite: (dishId) => dispatch(postFavorite(dishId))
+    postFavorite: (dishId) => dispatch(postFavorite(dishId)),
+    postComment: (dishId, rating, author, comment) => dispatch(postComment(dishId, rating, author, comment))
 });
 function RenderDish(props) {
     const dish = props.dish;
@@ -71,7 +72,7 @@ function RenderComment(props){
                         startingValue = {item.rating}
                     />
                 </View>
-                <Text style={{fontSize: 12}}>{'--' +item.date}</Text>
+                <Text style={{fontSize: 12}}>{'--'+ item.author+ ',' +item.date}</Text>
             </View>
         );
     }
@@ -86,6 +87,8 @@ function RenderComment(props){
         </Card>
     );
 }
+
+let id =100;
 
 class DishDetail extends Component {
 
@@ -105,9 +108,9 @@ class DishDetail extends Component {
         console.log(this.state.show);
         
     }
-
-    submitComment(){
+    submitComment(dishId){
         console.log(JSON.stringify(this.state))
+        this.props.postComment(dishId, this.state.rating, this.state.author, this.state.comment)
         this.setState({ show: !this.state.show})
     }
 
@@ -153,20 +156,20 @@ class DishDetail extends Component {
                             <Input
                                 leftIcon={
                                     <Icon
-                                        name='user'
+                                        name='user-o'
                                         type='font-awesome'
                                         size={24}
                                         color='black'
                                     />
                                 }
-                                placeholder="Author Name"
+                                placeholder="Author"
                                 style={{paddingBottom: 10}}
                                 onChangeText={(name) => this.setState({author: name})}
                             />
                             <Input
                                 leftIcon={
                                     <Icon
-                                        name='comment'
+                                        name='comment-o'
                                         type='font-awesome'
                                         size={24}
                                         color='black'
@@ -180,7 +183,7 @@ class DishDetail extends Component {
                         <View style={{margin: 15}}>
                             <View style={{paddingBottom: 20}}>
                                 <Button
-                                    onPress = {() => {this.submitComment()}}
+                                    onPress = {() => {this.submitComment(dishId)}}
                                     color="#512DA8"
                                     title="Submit"
                                     style={{margin: 10}}
