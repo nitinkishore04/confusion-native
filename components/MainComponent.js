@@ -9,6 +9,7 @@ import About from './AboutUsComponent';
 import { Icon } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { fetchComments, fetchDishes, fetchLeaders, fetchPromos} from '../redux/ActionCreators';
+import Reservation from './ReservationComponent';
 
 
 
@@ -112,6 +113,23 @@ const AboutNavigator = createStackNavigator(
     }
 )
 
+const ReservationNavigator = createStackNavigator({
+    Reservation: { screen: Reservation }
+  }, {
+    navigationOptions: ({ navigation }) => ({
+      headerStyle: {
+          backgroundColor: "#512DA8"
+      },
+      headerTitleStyle: {
+          color: "#fff"            
+      },
+      headerTintColor: "#fff",
+      headerLeft: <Icon name="menu" size={24}
+        iconStyle={{ color: 'white' }} 
+        onPress={ () => navigation.navigate('DrawerToggle') } />    
+    })
+  })
+
 const CustomDrawerContentComponent = (props) => (
     <ScrollView>
         <SafeAreaView style={styles.container}
@@ -135,7 +153,7 @@ const MainNavigator = createDrawerNavigator({
         screen: HomeNavigator,
         navigationOptions: {
             title: "Home",
-            drawLabel: "Home",
+            drawerLabel: "Home",
             drawerIcon: ({ tintColor }) => (
                 <Icon
                     name= 'home'
@@ -150,7 +168,7 @@ const MainNavigator = createDrawerNavigator({
         screen: MenuNavigator,
         navigationOptions: {
             title: "Menu",
-            drawLabel: "Menu",
+            drawerLabel: "Menu",
             drawerIcon: ({ tintColor }) => (
                 <Icon
                     name= 'list'
@@ -165,7 +183,7 @@ const MainNavigator = createDrawerNavigator({
         screen: ContactNavigator,
         navigationOptions: {
             title: "Contact",
-            drawLabel: "Contact",
+            drawerLabel: "Contact",
             drawerIcon: ({ tintColor }) => (
                 <Icon
                     name= 'address-card'
@@ -180,7 +198,7 @@ const MainNavigator = createDrawerNavigator({
         screen: AboutNavigator,
         navigationOptions: {
             title: "About Us",
-            drawLabel: "About us",
+            drawerLabel: "About us",
             drawerIcon: ({ tintColor }) => (
                 <Icon
                     name= 'info-circle'
@@ -190,7 +208,22 @@ const MainNavigator = createDrawerNavigator({
                     />
             )
         }
-    }
+    },
+    Reservation:
+      { screen: ReservationNavigator,
+        navigationOptions: {
+          title: 'Reserve Table',
+          drawerLabel: 'Reserve Table',
+          drawerIcon: ({ tintColor, focused }) => (
+            <Icon
+              name='cutlery'
+              type='font-awesome'            
+              size={24}
+              iconStyle={{ color: tintColor }}
+            />
+          ),
+        }
+      }
 }, {
     drawerBackgroundColor: "#D1C4E9",
     contentComponent: CustomDrawerContentComponent
