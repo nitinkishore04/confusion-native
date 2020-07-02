@@ -5,7 +5,6 @@ import { dishes } from './dishes';
 import { comments } from './comments';
 import { promotions } from './promotions';
 import { leaders } from './leaders';
-// import { favorites } from './favorites';
 
 import { favorites } from './favorites';
 
