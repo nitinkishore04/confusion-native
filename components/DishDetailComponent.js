@@ -111,7 +111,12 @@ class DishDetail extends Component {
     submitComment(dishId){
         console.log(JSON.stringify(this.state))
         this.props.postComment(dishId, this.state.rating, this.state.author, this.state.comment)
-        this.setState({ show: !this.state.show})
+        this.setState({ 
+            show: false,
+            author: '',
+            comment: '',
+            rating: 0
+        })
     }
 
     markFavorites(dishId){
