@@ -69,7 +69,7 @@ function RenderComment(props){
                         imageSize = {15}
                         readonly = {true}
                         ratingCount = {5}
-                        startingValue = {item.rating}
+                        startingValue = {parseInt(item.rating)}
                     />
                 </View>
                 <Text style={{fontSize: 12}}>{'--'+ item.author+ ',' +item.date}</Text>
