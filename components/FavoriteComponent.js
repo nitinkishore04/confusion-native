@@ -4,6 +4,8 @@ import { ListItem } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
 import { Loading } from './LoadingComponent';
+import { deleteFavorite } from '../redux/ActionCreators';
+import Swipeout from 'react-native-swipeout';
 
 
 
@@ -14,6 +16,10 @@ const mapStateToProps = state =>{
     }
 }
 
+const mapDispatchToProps = dispatch => ({
+    deleteFavorite: (dishId) => dispatch(deleteFavorite(dishId))
+})
+
 class Favorite extends Component {
 
     static navigationOPtions = {
@@ -23,17 +29,29 @@ class Favorite extends Component {
     render(){
         const { navigate } = this.props.navigation;
 
+
         const renderMenuItem = ({item, index}) => {
+
+            const rightButton = [
+                {
+                    text: 'Delete',
+                    type: 'delete',
+                    onPress: () => this.props.deleteFavorite(item.id)
+                }
+            ];
+
             return(
                 <View style={{margin: 8}}>
-                    <ListItem
-                        key = {index}
-                        title = {item.name}
-                        onPress = {() => navigate('DishDetail', { dishId: item.id })}
-                        subtitle = {item.description}
-                        hideChevron = {true}
-                        leftAvatar = {{ source: { uri: baseUrl + item.image  } }}
-                    />
+                    <Swipeout right={rightButton} autoClose={true}>
+                        <ListItem
+                            key = {index}
+                            title = {item.name}
+                            onPress = {() => navigate('DishDetail', { dishId: item.id })}
+                            subtitle = {item.description}
+                            hideChevron = {true}
+                            leftAvatar = {{ source: { uri: baseUrl + item.image  } }}
+                        />
+                    </Swipeout>
                 </View>
             );
         }
@@ -62,4 +80,4 @@ class Favorite extends Component {
     }
 }
 
-export default connect(mapStateToProps)(Favorite);
+export default connect(mapStateToProps, mapDispatchToProps)(Favorite);

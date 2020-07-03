@@ -10,6 +10,7 @@ YellowBox.ignoreWarnings([
     'componentWillReceiveProps has been renamed',
     'DrawerLayoutAndroid drawerPosition',
     'VirtualizedLists should never be nested',
-    'componentWillUpdate has been renamed'
+    'componentWillUpdate has been renamed',
+    'componentWillMount has been renamed'
 ])
 registerRootComponent(App);
