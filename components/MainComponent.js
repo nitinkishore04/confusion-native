@@ -10,6 +10,7 @@ import { Icon } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { fetchComments, fetchDishes, fetchLeaders, fetchPromos} from '../redux/ActionCreators';
 import Reservation from './ReservationComponent';
+import Favorite from './FavoriteComponent';
 
 
 
@@ -110,8 +111,8 @@ const AboutNavigator = createStackNavigator(
             onPress = {() => navigation.toggleDrawer()}
             />  
         }),
-    }
-)
+    },
+);
 
 const ReservationNavigator = createStackNavigator({
     Reservation: { screen: Reservation }
@@ -127,8 +128,28 @@ const ReservationNavigator = createStackNavigator({
       headerLeft: <Icon name="menu" size={24}
         iconStyle={{ color: 'white' }} 
         onPress={ () => navigation.toggleDrawer() } />    
-    })
-  })
+    }),
+  },
+);
+
+const FavoriteNavigator = createStackNavigator({
+    Favorite: { screen: Favorite }
+  }, {
+    navigationOptions: ({ navigation }) => ({
+      headerStyle: {
+          backgroundColor: "#512DA8"
+      },
+      headerTitleStyle: {
+          color: "#fff"            
+      },
+      headerTintColor: "#fff",
+      headerLeft: <Icon name="menu" size={24}
+        iconStyle={{ color: 'white' }} 
+        onPress={ () => navigation.toggleDrawer() } />    
+    }),
+  },
+);
+
 
 const CustomDrawerContentComponent = (props) => (
     <ScrollView>
@@ -172,6 +193,21 @@ const MainNavigator = createDrawerNavigator({
             drawerIcon: ({ tintColor }) => (
                 <Icon
                     name= 'list'
+                    type= 'font-awesome'
+                    size = {24}
+                    color = { tintColor }
+                    />
+            )
+        }
+    },
+    Favorite: {
+        screen: FavoriteNavigator,
+        navigationOptions: {
+            title: "My Favorites",
+            drawerLabel: "My Favorites",
+            drawerIcon: ({ tintColor }) => (
+                <Icon
+                    name= 'heart'
                     type= 'font-awesome'
                     size = {24}
                     color = { tintColor }
