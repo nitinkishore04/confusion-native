@@ -1,5 +1,5 @@
 import React, { Component} from 'react'
-import { View, Text, FlatList, ScrollView, Modal, StyleSheet, Button } from 'react-native';
+import { View, Text, FlatList, ScrollView, Modal, StyleSheet, Button, Alert, PanResponder } from 'react-native';
 import { Card, Icon, Input, Rating } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
@@ -21,10 +21,46 @@ const mapDispatchToProps = dispatch => ({
 });
 function RenderDish(props) {
     const dish = props.dish;
+
+    const recognizeDrag = ({moveX, moveY, dy, dx}) => {
+
+        if( dx < -200)
+            return true;
+        else 
+            return false;
+
+    };
+
+    const panResponder = PanResponder.create({
+        onStartShouldSetPanResponder: (e, gestureState) => {
+            return true;
+        },  
+        onPanResponderEnd: (e, gestureState) => {
+            if (recognizeDrag(gestureState)){
+                Alert.alert(
+                    'Add Favorite',
+                    'Are you sure you wish to add to the Favorite ' + dish.name+'?',
+                    [
+                        {
+                            text: 'Cancel',
+                            onPress: () => console.log(' Cancel Pressed '),
+                            style: 'cancel'
+                        },
+                         {
+                            text: 'Ok',
+                            onPress: () => props.favorite ? console.log(' Already Favorite') : props.onPress()
+                        }
+                    ],
+                    { cancelable: false}
+                )
+            return true;
+            }
+        }
+    });
     
     if (dish != null) {
         return(
-            <Animatable.View animation="fadeInDown" duration={2000} delay={1000}>
+            <Animatable.View animation="fadeInDown" duration={2000} delay={1000} {...panResponder.panHandlers}>
                 <Card featuredTitle = {dish.name} image = {{ uri: baseUrl + dish.image }}>
                     <Text style={{margin: 10}}>{dish.description}</Text>
                     <View style={{display: 'flex', flex: 1, flexDirection: 'row', justifyContent: 'center'}}>
