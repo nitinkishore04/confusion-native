@@ -3,6 +3,8 @@ import { Text, View, ScrollView, StyleSheet, Picker, Switch, Button, Modal, Aler
 import { Card } from "react-native-elements";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import * as Animatable from 'react-native-animatable';
+import { Notifications } from 'expo';
+import * as Permissions from 'expo-permissions';
 
 class Reservation extends Component {
   constructor(props) {
@@ -36,6 +38,33 @@ class Reservation extends Component {
     });
   }
 
+  async obtainNotoficationPermission(){
+    let permission = await Permissions.getAsync(Permissions.USER_FACING_NOTIFICATIONS)
+    if ( permission !== 'granted'){
+      permission = await Permissions.getAsync(Permissions.USER_FACING_NOTIFICATIONS)
+      if (permission.status !== 'granted') {
+        Alert.alert('Permission not granted to show notifications');
+      }
+    }
+    return permission;
+  }
+
+  async presentLocalNotification(date){
+    await this.obtainNotoficationPermission();
+    Notifications.presentLocalNotificationAsync({
+      title: "Your Reservation Notification",
+      body: `Reservation for ${date} requested`,
+      ios: {
+        sound: true
+      },
+      android: {
+        sound: true,
+        vibrate: true,
+        color: '#512DA8'
+      }
+    })
+  }
+
   render() {
     const showDatepicker = () => {
       this.setState({ show: true });
@@ -50,7 +79,10 @@ class Reservation extends Component {
             onPress: () => this.resetForm(),
             style: "cancel"
           },
-          { text: "OK", onPress: () => this.resetForm() }
+          { text: "OK", onPress: () => {
+            this.resetForm();
+            this.presentLocalNotification(this.state.date);
+          } }
         ],
         { cancelable: false }
       );
