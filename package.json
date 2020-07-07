@@ -11,6 +11,7 @@
     "@react-native-community/async-storage": "^1.11.0",
     "@react-native-community/datetimepicker": "^2.5.0",
     "@react-native-community/masked-view": "^0.1.10",
+    "@react-native-community/netinfo": "^5.9.4",
     "@react-navigation/bottom-tabs": "^5.6.1",
     "expo": "~38.0.1",
     "expo-asset": "~8.1.7",
