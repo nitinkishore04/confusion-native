@@ -1,5 +1,5 @@
 import React, { Component} from 'react'
-import { View, Text, FlatList, ScrollView, Modal, StyleSheet, Button, Alert, PanResponder } from 'react-native';
+import { View, Text, FlatList, ScrollView, Modal, StyleSheet, Button, Alert, PanResponder, Share } from 'react-native';
 import { Card, Icon, Input, Rating } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
@@ -75,6 +75,16 @@ function RenderDish(props) {
             return true;
         },
     });
+
+    const shareDish = (title, message, url) => {
+        Share.share({
+            title: title,
+            message: title + ' '+ message +' '+ url,
+            url: url
+        },{
+            dialogTitle: 'Share '+ title
+        })
+    }
     
     if (dish != null) {
         return(
@@ -85,7 +95,7 @@ function RenderDish(props) {
                         <Icon
                             raised
                             reverse
-                            style={{flex: 1, flexDirection: 'column', marginLeft: 30}}
+                            style={{flex: 1, flexDirection: 'column'}}
                             name = { props.favorite ? 'heart' : 'heart-o'}
                             type = 'font-awesome'
                             color = '#f50'
@@ -95,10 +105,19 @@ function RenderDish(props) {
                             raised
                             reverse
                             style={{flex: 1, flexDirection: 'column'}}
-                            name = { 'pencil' }
+                            name = 'pencil' 
                             type = 'font-awesome'
                             color = '#512DA8'
                             onPress = { () => props.showModal() }
+                        />
+                        <Icon
+                            raised
+                            reverse
+                            name = 'share'
+                            type = 'font-awesome'
+                            color = '#512DA8'
+                            style={{flex: 1, flexDirection: 'column'}}
+                            onPress = {() => shareDish(dish.name,dish.description,baseUrl + dish.image)}
                         />
                     </View>
                 </Card>
