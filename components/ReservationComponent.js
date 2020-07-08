@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { Text, View, ScrollView, StyleSheet, Picker, Switch, Button, Modal, Alert } from "react-native";
-import { Card } from "react-native-elements";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import * as Animatable from 'react-native-animatable';
 import { Notifications } from 'expo';
 import * as Permissions from 'expo-permissions';
+import * as Calendar from 'expo-calendar';
 
 class Reservation extends Component {
   constructor(props) {
@@ -23,7 +23,9 @@ class Reservation extends Component {
 
   handleReservation() {
     console.log(JSON.stringify(this.state));
-    this.toggleModal();
+    this.addReservationToCalendar(this.state.date);
+    this.presentLocalNotification(this.state.date);
+    this.resetForm();
   }
 
   resetForm() {
@@ -65,6 +67,54 @@ class Reservation extends Component {
     })
   }
 
+
+  obtainCalendarPermission = async () => {
+    const calendarPermission = await Permissions.askAsync(Permissions.CALENDAR);
+    if ( calendarPermission === 'granted') {
+      if (permission.status !== 'granted') {
+        permission = await Permissions.askAsync(Permissions.CALENDAR);
+        if (permission.status !== 'granted') {
+          Alert.alert('Permission not granted to access the calendar');
+        }
+      }
+      return permission;
+    }
+  }
+
+
+  async addReservationToCalendar(date) {
+    await this.obtainCalendarPermission();
+    console.log("Date: "+date);
+    
+    let dateMs = Date.parse(date);
+    let startDate = new Date(dateMs);
+    let endDate = new Date(dateMs + 2 * 60 * 60 * 1000);
+    const defaultCalendarSource =
+    Platform.OS === 'ios'
+    ? await getDefaultCalendarSource()
+    : { isLocalAccount: true, name: 'Expo Calendar' };
+    let details = {
+    title: 'Con Fusion Table Reservation',
+    source: defaultCalendarSource,
+    name: 'internalCalendarName',
+    color: 'blue',
+    entityType: Calendar.EntityTypes.EVENT,
+    sourceId: defaultCalendarSource.id,
+    ownerAccount: 'personal',
+    accessLevel: Calendar.CalendarAccessLevel.OWNER,
+    }
+
+    const calendarId = await Calendar.createCalendarAsync(details);
+      await Calendar.createEventAsync(calendarId , {
+      title: 'Con Fusion Table Reservation',
+      startDate: startDate,
+      endDate: endDate,
+      timeZone: 'Asia/Hong_Kong',
+      location: '121, Clear Water Bay Road, Clear Water Bay, Kowloon, Hong Kong'
+    });
+
+  }
+
   render() {
     const showDatepicker = () => {
       this.setState({ show: true });
@@ -79,10 +129,7 @@ class Reservation extends Component {
             onPress: () => this.resetForm(),
             style: "cancel"
           },
-          { text: "OK", onPress: () => {
-            this.resetForm();
-            this.presentLocalNotification(this.state.date);
-          } }
+          { text: "OK", onPress: () => this.handleReservation() }
         ],
         { cancelable: false }
       );
